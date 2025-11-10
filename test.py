@@ -2,6 +2,7 @@ from fastapi import FastAPI, HTTPException
 from supabase import create_client, Client
 import os
 from dotenv import load_dotenv
+from fastapi.middleware.cors import CORSMiddleware
 
 # Load environment variables
 load_dotenv()
@@ -12,6 +13,15 @@ SUPABASE_KEY = os.getenv("SUPABASE_KEY")
 supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
 
 app = FastAPI()
+
+# CORS middleware for local frontend-backend connection
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],         # Allow all origins for dev; restrict in prod!
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 @app.get("/")
 def root():
